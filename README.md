@@ -21,7 +21,13 @@ supported natively.
 ## Usage
 
 ```
-USAGE: video-slimmer [<options>] <input> <output>
+OVERVIEW: A tool that removes unneeded audio and subtitle tracks from a movie container file using FFMPEG.
+
+USAGE: No transcoding occurs unless necessary; the tracks to be kept are
+       preferrably copied to a new container file without modification.
+
+       VideoSlimmer supports removing audio and subtitle tracks that don't match
+       desired languages, audio codecs, or subtitle codecs.
 
 ARGUMENTS:
   <input>                 The video file to slim

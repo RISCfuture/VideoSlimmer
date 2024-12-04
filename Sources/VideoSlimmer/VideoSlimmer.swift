@@ -5,6 +5,17 @@ import libVideoSlimmer
 /// The entry point for the command line tool.
 @main
 struct VideoSlimmer: AsyncParsableCommand {
+    static let configuration = CommandConfiguration(
+        abstract: "A tool that removes unneeded audio and subtitle tracks from a movie container file using FFMPEG.",
+        usage: """
+            No transcoding occurs unless necessary; the tracks to be kept are
+            preferrably copied to a new container file without modification.
+            
+            VideoSlimmer supports removing audio and subtitle tracks that don't match
+            desired languages, audio codecs, or subtitle codecs.
+            """
+    )
+    
     @Option(name: .long,
             help: "Path to ffmpeg executable",
             transform:  { URL(filePath: $0, directoryHint: .notDirectory) })
