@@ -39,10 +39,10 @@ struct VideoComparator: StreamComparator {
     }
     
     func compare(_ lhs: VideoStream, _ rhs: VideoStream) -> ComparisonResult {
-        if let result = compareResolutions(lhs, rhs) { return result }
-        if let result = compareCodecs(lhs, rhs) { return result }
-        if let result = compareBPS(lhs, rhs) { return result }
-        return compareIndexes(lhs, rhs)
+        compareResolutions(lhs, rhs) ??
+            compareCodecs(lhs, rhs) ??
+            compareBPS(lhs, rhs) ??
+            compareIndexes(lhs, rhs)
     }
     
     private func compareResolutions(_ lhs: VideoStream, _ rhs: VideoStream) -> ComparisonResult? {
@@ -67,12 +67,12 @@ struct AudioComparator: StreamComparator {
     }
     
     func compare(_ lhs: AudioStream, _ rhs: AudioStream) -> ComparisonResult {
-        if let result = compareChannelCount(lhs, rhs) { return result }
-        if let result = compareCodecs(lhs, rhs) { return result }
-        if let result = compareBitDepth(lhs, rhs) { return result }
-        if let result = compareSampleRate(lhs, rhs) { return result }
-        if let result = compareBPS(lhs, rhs) { return result }
-        return compareIndexes(lhs, rhs)
+        compareChannelCount(lhs, rhs) ??
+            compareCodecs(lhs, rhs) ??
+            compareBitDepth(lhs, rhs) ??
+            compareSampleRate(lhs, rhs) ??
+            compareBPS(lhs, rhs) ??
+            compareIndexes(lhs, rhs)
     }
     
     private func compareChannelCount(_ lhs: AudioStream, _ rhs: AudioStream) -> ComparisonResult? {
