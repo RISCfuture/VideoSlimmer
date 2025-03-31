@@ -7,7 +7,7 @@ extension Array where Element: Hashable {
             return true
         }
     }
-    
+
     mutating func removeDuplicates() {
         var seen = Set<Element>()
         removeAll(where: { element in
