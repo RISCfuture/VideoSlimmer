@@ -21,7 +21,7 @@ public struct Operation {
   /// The FFMPEG `-c:x` argument and its options.
   public var codecArgument: [String] {
     switch kind {
-      case .convert(let codec, let arguments): return [codecFlag, codec] + arguments
+      case let .convert(codec, arguments): return [codecFlag, codec] + arguments
       case .copy: return [codecFlag, "copy"]
     }
   }

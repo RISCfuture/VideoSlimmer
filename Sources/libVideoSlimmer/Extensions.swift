@@ -1,4 +1,12 @@
 extension Array where Element: Hashable {
+
+  /// Returns a new array with duplicate elements removed, preserving order.
+  ///
+  /// The first occurrence of each element is kept; subsequent duplicates
+  /// are removed.
+  ///
+  /// - Returns: A new array containing only the unique elements from this array,
+  ///   in their original order of first appearance.
   func removingDuplicates() -> Array {
     var seen = Set<Element>()
     return self.filter { element in
@@ -8,6 +16,10 @@ extension Array where Element: Hashable {
     }
   }
 
+  /// Removes duplicate elements from this array in place, preserving order.
+  ///
+  /// The first occurrence of each element is kept; subsequent duplicates
+  /// are removed.
   mutating func removeDuplicates() {
     var seen = Set<Element>()
     removeAll(where: { element in
