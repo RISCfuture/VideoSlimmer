@@ -52,7 +52,7 @@ public struct VideoStream: CodedStream {
   public let tags: [String: String]
 
   /// The video encoding profile (e.g., `high`).
-  public let profile: String
+  public let profile: String?
 
   /// The video width, in pixels.
   public let width: UInt
@@ -73,7 +73,7 @@ public struct VideoStream: CodedStream {
 
     index = try container.decode(UInt.self, forKey: .index)
     codecName = try container.decode(String.self, forKey: .codec_name)
-    profile = try container.decode(String.self, forKey: .profile)
+    profile = try container.decodeIfPresent(String.self, forKey: .profile)
     width = try container.decode(UInt.self, forKey: .width)
     height = try container.decode(UInt.self, forKey: .height)
     pixelFormat = try container.decode(String.self, forKey: .pix_fmt)
