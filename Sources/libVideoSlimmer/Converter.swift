@@ -179,7 +179,9 @@ public class Converter {
     return container.audioStreams.filter { stream in
       if stream.language != language { return false }
       if !stream.dispositions.isEmpty {
-        if !stream.dispositions.contains(.default) && !stream.dispositions.contains(.dub) {
+        if !stream.dispositions.contains(.default) && !stream.dispositions.contains(.dub)
+          && !stream.dispositions.contains(.original)
+        {
           return false
         }
       }

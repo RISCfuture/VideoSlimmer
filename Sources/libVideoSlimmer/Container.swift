@@ -351,7 +351,7 @@ public struct Container: Decodable, Sendable {
               decodedStreams.append(attachmentStream)
             } catch Errors.unknownStreamType {
               // Data streams are ignored (not needed for conversion)
-              let _ = try codedStreams.decode(DataStream.self)
+              _ = try codedStreams.decode(DataStream.self)
             }
           }
         }
