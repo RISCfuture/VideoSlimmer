@@ -106,7 +106,7 @@ public final class FFMPEGProcessor: Processor {
     let convertArguments = (operations.map(\.codecArgument) + operations.map(\.mapArgument))
       .removingDuplicates().flatMap(\.self)
     let arguments =
-      ["-i", inputURL.path(percentEncoded: false)] + convertArguments + [
+      ["-y", "-i", inputURL.path(percentEncoded: false)] + convertArguments + [
         outputURL.path(percentEncoded: false)
       ]
     let process = Process()

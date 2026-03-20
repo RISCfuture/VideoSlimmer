@@ -79,6 +79,12 @@ public class Converter {
   /// filtering subtitle streams.
   public var subtitlePreferredCodecs = ["hdmv_pgs_subtitle", "subrip"]
 
+  /// Subtitle codecs that are incompatible with MKV and need transcoding.
+  public var subtitleIncompatibleCodecs = ["mov_text"]
+
+  /// Codec to use when transcoding an incompatible subtitle stream.
+  public var subtitleConversionCodec = "srt"
+
   /// The container file to convert.
   public let container: Container
 
@@ -225,6 +231,13 @@ public class Converter {
   }
 
   private func operation(forStream stream: SubtitleStream) -> Operation {
-    .init(streamIndex: stream.index, streamType: .subtitle, kind: .copy)
+    if subtitleIncompatibleCodecs.contains(stream.codecName) {
+      return .init(
+        streamIndex: stream.index,
+        streamType: .subtitle,
+        kind: .convert(codec: subtitleConversionCodec, arguments: [])
+      )
+    }
+    return .init(streamIndex: stream.index, streamType: .subtitle, kind: .copy)
   }
 }

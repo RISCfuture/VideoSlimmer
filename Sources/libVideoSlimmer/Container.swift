@@ -215,6 +215,30 @@ public struct AttachmentStream: Stream {
   }
 }
 
+/// A stream with arbitrary data (ignored during conversion).
+public struct DataStream: Stream {
+  public let index: UInt
+
+  public let dispositions: Set<Disposition>
+  public let tags: [String: String]
+
+  public init(from decoder: any Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    let type = try container.decode(String.self, forKey: .codec_type)
+    guard type == "data" else { throw Errors.unknownStreamType(type) }
+
+    index = try container.decode(UInt.self, forKey: .index)
+    tags = try container.decodeIfPresent(Dictionary<String, String>.self, forKey: .tags) ?? [:]
+
+    let dispositions = try container.decode(Dictionary<String, UInt8>.self, forKey: .disposition)
+    self.dispositions = Self.decodeDispositions(dispositions)
+  }
+
+  private enum CodingKeys: String, CodingKey {
+    case index, tags, disposition, codec_type
+  }
+}
+
 /// Stream dispositions provide usage hints for a stream.
 public enum Disposition: String, Decodable, Sendable {
 
@@ -322,8 +346,13 @@ public struct Container: Decodable, Sendable {
             let subtitleStream = try codedStreams.decode(SubtitleStream.self)
             decodedStreams.append(subtitleStream)
           } catch Errors.unknownStreamType {
-            let attachmentStream = try codedStreams.decode(AttachmentStream.self)
-            decodedStreams.append(attachmentStream)
+            do {
+              let attachmentStream = try codedStreams.decode(AttachmentStream.self)
+              decodedStreams.append(attachmentStream)
+            } catch Errors.unknownStreamType {
+              // Data streams are ignored (not needed for conversion)
+              let _ = try codedStreams.decode(DataStream.self)
+            }
           }
         }
       }
