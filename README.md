@@ -94,14 +94,14 @@ track is selected according to the following priorities:
 * the lower index number.
 
 If `--include-other-audio` is not set, only audio tracks whose disposition is
-"default" or "dub", or who have no disposition flags are chosen according to
-this algorithm.
+"default", "dub", or "original", or who have no disposition flags are chosen
+according to this algorithm.
 
 If `--include-other-audio` is set, after one audio track per language is chosen
 according to the above algorithm, additional audio tracks are chosen as long as
-they have a non-default/dub disposition (e.g., hearing-impaired or commentary)
-and they match a selected language. They are re-sorted according to the above
-priorities. 
+they have a non-default/dub/original disposition (e.g., hearing-impaired or
+commentary) and they match a selected language. They are re-sorted according to
+the above priorities. 
 
 ### Subtitle track selection
 

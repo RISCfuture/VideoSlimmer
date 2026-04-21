@@ -113,10 +113,17 @@ public final class FFMPEGProcessor: Processor {
     process.executableURL = ffmpegURL
     process.arguments = arguments
     process.standardInput = Pipe()
-    if suppressStderr { process.standardError = Pipe() }
+    if suppressStderr { process.standardError = FileHandle.nullDevice }
 
     try process.run()
     process.waitUntilExit()
+
+    guard process.terminationStatus == 0 else {
+      throw Errors.badExitCode(
+        process: ffmpegURL.lastPathComponent,
+        exitCode: process.terminationStatus
+      )
+    }
   }
 }
 

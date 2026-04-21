@@ -33,15 +33,19 @@ public class Reader {
     process.arguments = arguments
     process.standardOutput = stdout
     process.standardInput = Pipe()
-    if suppressStderr { process.standardError = Pipe() }
+    if suppressStderr { process.standardError = FileHandle.nullDevice }
 
     try process.run()
-    //        process.waitUntilExit()
+    let data = try stdout.fileHandleForReading.readToEnd()
+    process.waitUntilExit()
 
-    //        guard process.terminationStatus == .zero else {
-    //            throw Errors.badExitCode(process: ffprobeURL.lastPathComponent, exitCode: process.terminationStatus)
-    //        }
-    guard let data = try stdout.fileHandleForReading.readToEnd() else {
+    guard process.terminationStatus == 0 else {
+      throw Errors.badExitCode(
+        process: ffprobeURL.lastPathComponent,
+        exitCode: process.terminationStatus
+      )
+    }
+    guard let data else {
       throw Errors.noDataFromFFProbe(url: file)
     }
 
@@ -197,6 +201,7 @@ public class Converter {
       if stream.dispositions.isEmpty { return false }
       if stream.dispositions.contains(.default) { return false }
       if stream.dispositions.contains(.dub) { return false }
+      if stream.dispositions.contains(.original) { return false }
       return true
     }
     .sorted(using: comparator)
