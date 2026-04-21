@@ -90,8 +90,18 @@ public final class FFMPEGProcessor: Processor {
   public var ffmpegURL =
     (try? which("ffmpeg")) ?? URL(filePath: "ffmpeg", directoryHint: .notDirectory)
 
+  /// The URL path to the `ffprobe` executable (used for post-process
+  /// verification).
+  public var ffprobeURL =
+    (try? which("ffprobe")) ?? URL(filePath: "ffprobe", directoryHint: .notDirectory)
+
   /// If `true`, `stderr` output will not be printed.
   public var suppressStderr = false
+
+  /// If `true`, the output file is re-probed after `ffmpeg` exits, and an
+  /// error is thrown if any expected stream is missing or empty (zero
+  /// packets). Defaults to `true`.
+  public var verifyOutput = true
 
   private let inputURL: URL
 
@@ -123,6 +133,40 @@ public final class FFMPEGProcessor: Processor {
         process: ffmpegURL.lastPathComponent,
         exitCode: process.terminationStatus
       )
+    }
+
+    if verifyOutput { try verify(outputURL: outputURL) }
+  }
+
+  private func verify(outputURL: URL) throws {
+    let reader = Reader(suppressStderr: suppressStderr)
+    reader.ffprobeURL = ffprobeURL
+    let output = try reader.open(file: outputURL, countPackets: true)
+
+    var expectedByType = [Operation.StreamType: Int]()
+    for operation in operations { expectedByType[operation.streamType, default: 0] += 1 }
+    let actualByType: [Operation.StreamType: Int] = [
+      .video: output.videoStreams.count,
+      .audio: output.audioStreams.count,
+      .subtitle: output.subtitleStreams.count
+    ]
+    for (type, expected) in expectedByType {
+      let actual = actualByType[type] ?? 0
+      if actual != expected {
+        throw Errors.verificationFailed(
+          "expected \(expected) \(type.rawValue) stream(s) in output, found \(actual)"
+        )
+      }
+    }
+
+    for stream in output.videoStreams + (output.audioStreams as [any CodedStream])
+      + output.subtitleStreams
+    {
+      if stream.nbReadPackets == 0 || stream.nbReadPackets == nil {
+        throw Errors.verificationFailed(
+          "output stream 0:\(stream.index) (\(stream.codecName)) contains no packets"
+        )
+      }
     }
   }
 }

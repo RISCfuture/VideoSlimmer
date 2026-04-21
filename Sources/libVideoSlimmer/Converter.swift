@@ -19,14 +19,18 @@ public class Reader {
 
   /**
    Reads a media file and creates a Container.
-  
+
    - Parameter file: The path to the container file.
+   - Parameter countPackets: If `true`, `-count_packets` is passed to
+   `ffprobe`, populating each ``CodedStream``'s ``CodedStream/nbReadPackets``
+   property. Slower, since `ffprobe` has to read every packet in the file.
    - Returns: The parsed Container.
    */
-  public func `open`(file: URL) throws -> Container {
-    let arguments = [
+  public func `open`(file: URL, countPackets: Bool = false) throws -> Container {
+    var arguments = [
       "-print_format", "json", "-show_format", "-show_streams", file.path(percentEncoded: false)
     ]
+    if countPackets { arguments.insert("-count_packets", at: 0) }
     let process = Process()
     let stdout = Pipe()
     process.executableURL = ffprobeURL

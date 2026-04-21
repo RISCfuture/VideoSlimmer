@@ -18,6 +18,11 @@ public protocol CodedStream: Stream {
 
   /// The codec name.
   var codecName: String { get }
+
+  /// The number of packets read from the stream, if `ffprobe` was invoked
+  /// with `-count_packets` (see ``Reader/open(file:countPackets:)``).
+  /// `nil` otherwise or if the count could not be determined.
+  var nbReadPackets: UInt? { get }
 }
 
 extension Stream {
@@ -50,6 +55,7 @@ public struct VideoStream: CodedStream {
   public let codecName: String
   public let dispositions: Set<Disposition>
   public let tags: [String: String]
+  public let nbReadPackets: UInt?
 
   /// The video encoding profile (e.g., `high`).
   public let profile: String?
@@ -60,8 +66,10 @@ public struct VideoStream: CodedStream {
   /// The video height, in pixels.
   public let height: UInt
 
-  /// The video pixel format tag (e.g., YUV420).
-  public let pixelFormat: String
+  /// The video pixel format tag (e.g., YUV420), if known. May be absent
+  /// for degenerate streams (e.g., an output container with a declared
+  /// but empty video stream).
+  public let pixelFormat: String?
 
   /// The temporal resolution (interlaced or progressive), if specified.
   public let fieldOrder: FieldOrder?
@@ -76,9 +84,11 @@ public struct VideoStream: CodedStream {
     profile = try container.decodeIfPresent(String.self, forKey: .profile)
     width = try container.decode(UInt.self, forKey: .width)
     height = try container.decode(UInt.self, forKey: .height)
-    pixelFormat = try container.decode(String.self, forKey: .pix_fmt)
+    pixelFormat = try container.decodeIfPresent(String.self, forKey: .pix_fmt)
     fieldOrder = try container.decodeIfPresent(FieldOrder.self, forKey: .field_order)
     tags = try container.decodeIfPresent(Dictionary<String, String>.self, forKey: .tags) ?? [:]
+    nbReadPackets = try container.decodeIfPresent(String.self, forKey: .nb_read_packets)
+      .flatMap { UInt($0) }
 
     let dispositions = try container.decode(Dictionary<String, UInt8>.self, forKey: .disposition)
     self.dispositions = Self.decodeDispositions(dispositions)
@@ -86,7 +96,7 @@ public struct VideoStream: CodedStream {
 
   private enum CodingKeys: String, CodingKey {
     case index, codec_name, profile, width, height, pix_fmt, field_order, tags, disposition,
-      codec_type
+      codec_type, nb_read_packets
   }
 
   /// Video field orders.
@@ -115,6 +125,7 @@ public struct AudioStream: CodedStream {
   public let codecName: String
   public let dispositions: Set<Disposition>
   public let tags: [String: String]
+  public let nbReadPackets: UInt?
 
   /// The audio encoding profile (e.g., `high`).
   public let profile: String?
@@ -154,6 +165,8 @@ public struct AudioStream: CodedStream {
     }
     self.bitsPerSample = bitsPerSample
     tags = try container.decodeIfPresent(Dictionary<String, String>.self, forKey: .tags) ?? [:]
+    nbReadPackets = try container.decodeIfPresent(String.self, forKey: .nb_read_packets)
+      .flatMap { UInt($0) }
 
     let dispositions = try container.decode(Dictionary<String, UInt8>.self, forKey: .disposition)
     self.dispositions = Self.decodeDispositions(dispositions)
@@ -161,7 +174,7 @@ public struct AudioStream: CodedStream {
 
   private enum CodingKeys: String, CodingKey {
     case index, codec_name, profile, sample_fmt, sample_rate, channels, bits_per_sample, tags,
-      disposition, codec_type, bits_per_raw_sample
+      disposition, codec_type, bits_per_raw_sample, nb_read_packets
   }
 }
 
@@ -169,6 +182,7 @@ public struct AudioStream: CodedStream {
 public struct SubtitleStream: CodedStream {
   public let index: UInt
   public let codecName: String
+  public let nbReadPackets: UInt?
 
   public let dispositions: Set<Disposition>
   public let tags: [String: String]
@@ -181,13 +195,15 @@ public struct SubtitleStream: CodedStream {
     index = try container.decode(UInt.self, forKey: .index)
     codecName = try container.decode(String.self, forKey: .codec_name)
     tags = try container.decodeIfPresent(Dictionary<String, String>.self, forKey: .tags) ?? [:]
+    nbReadPackets = try container.decodeIfPresent(String.self, forKey: .nb_read_packets)
+      .flatMap { UInt($0) }
 
     let dispositions = try container.decode(Dictionary<String, UInt8>.self, forKey: .disposition)
     self.dispositions = Self.decodeDispositions(dispositions)
   }
 
   private enum CodingKeys: String, CodingKey {
-    case index, codec_name, tags, disposition, codec_type
+    case index, codec_name, tags, disposition, codec_type, nb_read_packets
   }
 }
 

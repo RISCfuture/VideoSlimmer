@@ -106,6 +106,12 @@ struct VideoSlimmer: AsyncParsableCommand {
   )
   var suppressStderr = false
 
+  @Flag(
+    name: .long,
+    help: "Skip post-process verification of the output file"
+  )
+  var skipVerify = false
+
   @Argument(
     help: "The video file to slim",
     completion: .file(),
@@ -147,7 +153,9 @@ struct VideoSlimmer: AsyncParsableCommand {
       : {
         let processor = FFMPEGProcessor(inputURL: input, operations: operations)
         if let ffmpeg { processor.ffmpegURL = ffmpeg }
+        if let ffprobe { processor.ffprobeURL = ffprobe }
         processor.suppressStderr = suppressStderr
+        processor.verifyOutput = !skipVerify
         return processor
       }()
 

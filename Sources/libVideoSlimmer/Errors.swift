@@ -32,6 +32,12 @@ public enum Errors: Error {
   ///
   /// - Parameter type: The unrecognized stream type string.
   case unknownStreamType(_ type: String)
+
+  /// The processed output file did not match expectations: a stream is
+  /// missing, or a declared stream contains no packet data.
+  ///
+  /// - Parameter message: A description of the verification failure.
+  case verificationFailed(_ message: String)
 }
 
 extension Errors: LocalizedError {
@@ -45,6 +51,8 @@ extension Errors: LocalizedError {
         return "File “\(filename)” does not contain a matching video stream"
       case .unknownStreamType(let type):
         return "Unknown stream type “\(type)”; expected video, audio, or subtitle"
+      case .verificationFailed(let message):
+        return "Output verification failed: \(message)"
     }
   }
 }
