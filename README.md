@@ -1,5 +1,9 @@
 # VideoSlimmer
 
+[![CI](https://github.com/RISCfuture/VideoSlimmer/actions/workflows/swift.yaml/badge.svg)](https://github.com/RISCfuture/VideoSlimmer/actions/workflows/swift.yaml)
+
+[![Documentation](https://github.com/RISCfuture/VideoSlimmer/actions/workflows/documentation.yaml/badge.svg)](https://riscfuture.github.io/VideoSlimmer/)
+
 VideoSlimmer is a tool that removes unneeded audio and subtitle tracks from a 
 movie container file using FFMPEG. No transcoding occurs unless necessary; the
 tracks to be kept are preferrably copied to a new container file without
