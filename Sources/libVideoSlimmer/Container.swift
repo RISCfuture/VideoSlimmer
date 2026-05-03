@@ -382,7 +382,8 @@ public struct Container: Decodable, Sendable {
     filename = try formatContainer.decode(String.self, forKey: .filename)
     duration = try Double(formatContainer.decode(String.self, forKey: .duration))!
     size = try UInt(formatContainer.decode(String.self, forKey: .size))!
-    tags = try formatContainer.decode(Dictionary<String, String>.self, forKey: .tags)
+    tags =
+      try formatContainer.decodeIfPresent(Dictionary<String, String>.self, forKey: .tags) ?? [:]
   }
 
   private enum CodingKeys: String, CodingKey {

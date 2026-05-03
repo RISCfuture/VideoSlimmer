@@ -10,7 +10,7 @@ public class Reader {
 
   /**
    Creates a new instance.
-  
+
    - Parameter suppressStderr: If `true`, `stderr` output will not be printed.
    */
   public init(suppressStderr: Bool = false) {
@@ -124,7 +124,7 @@ public class Converter {
 
   /**
    Creates an instance.
-  
+
    - Parameter container: The container file to convert.
    - Parameter languages: The audio and subtitle languages to filter in.
    - Parameter preserveNoLanguages: If `true`, preserves audio and subtitle

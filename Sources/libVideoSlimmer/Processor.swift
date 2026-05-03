@@ -59,7 +59,7 @@ public protocol Processor {
 
   /**
    Creates a processor instance.
-  
+
    - Parameter inputURL: The input video file.
    - Parameter operations: The operations to perform on the video.
    */
@@ -67,7 +67,7 @@ public protocol Processor {
 
   /**
    Processes a video file.
-  
+
    - Parameter outputURL: The output video file.
    */
   func process(outputURL: URL) async throws
