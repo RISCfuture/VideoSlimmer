@@ -15,17 +15,4 @@ extension Array where Element: Hashable {
       return true
     }
   }
-
-  /// Removes duplicate elements from this array in place, preserving order.
-  ///
-  /// The first occurrence of each element is kept; subsequent duplicates
-  /// are removed.
-  mutating func removeDuplicates() {
-    var seen = Set<Element>()
-    removeAll(where: { element in
-      if seen.contains(element) { return true }
-      seen.insert(element)
-      return false
-    })
-  }
 }
