@@ -86,11 +86,13 @@ Consider a container with the following streams:
 With `languages = ["eng"]` and default codec preferences:
 
 **Selected streams:**
+
 - Stream 0 (video): hevc, copied
 - Stream 1 (audio): truehd 7.1 English, copied (best English audio)
 - Stream 5 (subtitle): PGS English, copied
 
 **Excluded streams:**
+
 - Stream 2: Lower channel count than stream 1
 - Stream 3: Lower channel count than stream 1
 - Stream 4: French (not in language list)
