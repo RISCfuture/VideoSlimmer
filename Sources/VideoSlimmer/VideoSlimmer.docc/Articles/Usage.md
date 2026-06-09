@@ -15,6 +15,7 @@ VideoSlimmer input.mkv output.mkv
 ```
 
 This keeps:
+
 - The best video stream
 - The best English audio stream
 - All English subtitle streams
@@ -106,7 +107,8 @@ VideoSlimmer -d movie.mkv output.mkv
 ```
 
 Output:
-```
+
+```text
 movie.mkv -> output.mkv:
   0:0 (video): copy
   0:1 (audio): copy
@@ -158,6 +160,7 @@ done
 ### Video
 
 VideoSlimmer selects the single best video stream based on:
+
 1. Resolution (higher is better)
 2. Codec preference order
 3. Bit rate
@@ -166,6 +169,7 @@ VideoSlimmer selects the single best video stream based on:
 ### Audio
 
 For each specified language, VideoSlimmer selects the best audio stream based on:
+
 1. Channel count (7.1 > 5.1 > stereo)
 2. Codec preference order
 3. Bit depth

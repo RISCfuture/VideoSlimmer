@@ -4,7 +4,7 @@
 
 [![Documentation](https://github.com/RISCfuture/VideoSlimmer/actions/workflows/documentation.yaml/badge.svg)](https://riscfuture.github.io/VideoSlimmer/)
 
-VideoSlimmer is a tool that removes unneeded audio and subtitle tracks from a 
+VideoSlimmer is a tool that removes unneeded audio and subtitle tracks from a
 movie container file using FFMPEG. No transcoding occurs unless necessary; the
 tracks to be kept are preferrably copied to a new container file without
 modification.
@@ -24,7 +24,7 @@ supported natively.
 
 ## Usage
 
-```
+```text
 OVERVIEW: A tool that removes unneeded audio and subtitle tracks from a movie container file using FFMPEG.
 
 USAGE: No transcoding occurs unless necessary; the tracks to be kept are
@@ -65,7 +65,7 @@ OPTIONS:
 ```
 
 The order of codecs provided by `--video-codec`, `--audio-codec`, and
-`--subtitle-codec` determines which codecs are given priority over others. 
+`--subtitle-codec` determines which codecs are given priority over others.
 
 The order of languages provided by `--language` determines the order the audio
 and subtitle tracks will appear in the output movie, and thus, which language
@@ -105,7 +105,7 @@ If `--include-other-audio` is set, after one audio track per language is chosen
 according to the above algorithm, additional audio tracks are chosen as long as
 they have a non-default/dub/original disposition (e.g., hearing-impaired or
 commentary) and they match a selected language. They are re-sorted according to
-the above priorities. 
+the above priorities.
 
 ### Subtitle track selection
 
