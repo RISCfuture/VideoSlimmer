@@ -19,7 +19,7 @@ The ``Reader`` class uses `ffprobe` to analyze a video container file and extrac
 
 ```swift
 let reader = Reader()
-let container = try reader.open(file: inputURL)
+let container = try await reader.open(file: inputURL)
 ```
 
 ### Stage 2: Converting
