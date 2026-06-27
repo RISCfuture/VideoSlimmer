@@ -3,6 +3,11 @@
 
 import PackageDescription
 
+let approachableConcurrency: [SwiftSetting] = [
+  .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
+  .enableUpcomingFeature("InferIsolatedConformances")
+]
+
 let package = Package(
   name: "VideoSlimmer",
   platforms: [.macOS(.v13)],
@@ -14,14 +19,16 @@ let package = Package(
     // Targets are the basic building blocks of a package, defining a module or a test suite.
     // Targets can depend on other targets in this package and products from dependencies.
     .target(
-      name: "libVideoSlimmer"
+      name: "libVideoSlimmer",
+      swiftSettings: approachableConcurrency
     ),
     .executableTarget(
       name: "VideoSlimmer",
       dependencies: [
         .product(name: "ArgumentParser", package: "swift-argument-parser"),
         "libVideoSlimmer"
-      ]
+      ],
+      swiftSettings: approachableConcurrency
     )
   ],
   swiftLanguageModes: [.v6]

@@ -130,7 +130,7 @@ struct VideoSlimmer: AsyncParsableCommand {
   mutating func run() async throws {
     let reader = Reader(suppressStderr: suppressStderr)
     if let ffprobe { reader.ffprobeURL = ffprobe }
-    let container = try reader.open(file: input)
+    let container = try await reader.open(file: input)
 
     let converter = Converter(
       container: container,

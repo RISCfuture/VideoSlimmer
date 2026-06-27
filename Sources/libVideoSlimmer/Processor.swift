@@ -112,7 +112,7 @@ public final class FFMPEGProcessor: Processor {
     self.operations = operations
   }
 
-  public func process(outputURL: URL) throws {
+  public func process(outputURL: URL) async throws {
     let convertArguments = (operations.map(\.codecArgument) + operations.map(\.mapArgument))
       .removingDuplicates().flatMap(\.self)
     let arguments =
@@ -125,8 +125,7 @@ public final class FFMPEGProcessor: Processor {
     process.standardInput = Pipe()
     if suppressStderr { process.standardError = FileHandle.nullDevice }
 
-    try process.run()
-    process.waitUntilExit()
+    try await process.runUntilExit()
 
     guard process.terminationStatus == 0 else {
       throw Errors.badExitCode(
@@ -135,13 +134,13 @@ public final class FFMPEGProcessor: Processor {
       )
     }
 
-    if verifyOutput { try verify(outputURL: outputURL) }
+    if verifyOutput { try await verify(outputURL: outputURL) }
   }
 
-  private func verify(outputURL: URL) throws {
+  private func verify(outputURL: URL) async throws {
     let reader = Reader(suppressStderr: suppressStderr)
     reader.ffprobeURL = ffprobeURL
-    let output = try reader.open(file: outputURL, countPackets: true)
+    let output = try await reader.open(file: outputURL, countPackets: true)
 
     var expectedByType = [Operation.StreamType: Int]()
     for operation in operations { expectedByType[operation.streamType, default: 0] += 1 }

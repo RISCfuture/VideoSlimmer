@@ -26,7 +26,7 @@ public class Reader {
    property. Slower, since `ffprobe` has to read every packet in the file.
    - Returns: The parsed Container.
    */
-  public func `open`(file: URL, countPackets: Bool = false) throws -> Container {
+  public func `open`(file: URL, countPackets: Bool = false) async throws -> Container {
     var arguments = [
       "-print_format", "json", "-show_format", "-show_streams", file.path(percentEncoded: false)
     ]
@@ -39,9 +39,10 @@ public class Reader {
     process.standardInput = Pipe()
     if suppressStderr { process.standardError = FileHandle.nullDevice }
 
-    try process.run()
-    let data = try stdout.fileHandleForReading.readToEnd()
-    process.waitUntilExit()
+    let readHandle = stdout.fileHandleForReading
+    async let output = readHandle.readAllData()
+    try await process.runUntilExit()
+    let data = try await output
 
     guard process.terminationStatus == 0 else {
       throw Errors.badExitCode(
@@ -49,7 +50,7 @@ public class Reader {
         exitCode: process.terminationStatus
       )
     }
-    guard let data else {
+    guard !data.isEmpty else {
       throw Errors.noDataFromFFProbe(url: file)
     }
 
