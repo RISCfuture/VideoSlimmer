@@ -12,4 +12,4 @@
 
 ### Reading Files
 
-- ``open(file:)``
+- ``open(file:countPackets:)``
