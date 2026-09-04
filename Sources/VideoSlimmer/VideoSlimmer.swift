@@ -147,7 +147,7 @@ struct VideoSlimmer: AsyncParsableCommand {
     converter.subtitlePreferredCodecs = subtitleCodecs
     let operations = try converter.operations()
 
-    let processor: Processor =
+    let processor: any Processor =
       dryRun
       ? DryRunProcessor(inputURL: input, operations: operations)
       : {

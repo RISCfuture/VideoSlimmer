@@ -1,4 +1,4 @@
-import Foundation
+public import Foundation
 
 /// Reads media files using `ffprobe` and returns ``Container``s.
 public class Reader {

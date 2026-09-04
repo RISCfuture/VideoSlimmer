@@ -332,7 +332,7 @@ public struct Container: Decodable, Sendable {
   public let tags: [String: String]
 
   /// The streams in the container.
-  public let streams: [Stream]
+  public let streams: [any Stream]
 
   /// The video streams.
   public var videoStreams: [VideoStream] { streams.compactMap { $0 as? VideoStream } }
@@ -347,7 +347,7 @@ public struct Container: Decodable, Sendable {
     let container = try decoder.container(keyedBy: CodingKeys.self)
 
     var codedStreams = try container.nestedUnkeyedContainer(forKey: .streams)
-    var decodedStreams = [Stream]()
+    var decodedStreams = [any Stream]()
 
     while !codedStreams.isAtEnd {
       do {
