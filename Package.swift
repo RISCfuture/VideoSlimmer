@@ -3,9 +3,13 @@
 
 import PackageDescription
 
-let approachableConcurrency: [SwiftSetting] = [
+let upcomingFeatures: [SwiftSetting] = [
   .enableUpcomingFeature("NonisolatedNonsendingByDefault"),
-  .enableUpcomingFeature("InferIsolatedConformances")
+  .enableUpcomingFeature("InferIsolatedConformances"),
+  .enableUpcomingFeature("ImmutableWeakCaptures"),
+  .enableUpcomingFeature("MemberImportVisibility"),
+  .enableUpcomingFeature("ExistentialAny"),
+  .enableUpcomingFeature("InternalImportsByDefault")
 ]
 
 let package = Package(
@@ -20,7 +24,7 @@ let package = Package(
     // Targets can depend on other targets in this package and products from dependencies.
     .target(
       name: "libVideoSlimmer",
-      swiftSettings: approachableConcurrency
+      swiftSettings: upcomingFeatures
     ),
     .executableTarget(
       name: "VideoSlimmer",
@@ -28,7 +32,7 @@ let package = Package(
         .product(name: "ArgumentParser", package: "swift-argument-parser"),
         "libVideoSlimmer"
       ],
-      swiftSettings: approachableConcurrency
+      swiftSettings: upcomingFeatures
     )
   ],
   swiftLanguageModes: [.v6]

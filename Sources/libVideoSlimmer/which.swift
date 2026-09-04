@@ -1,4 +1,4 @@
-import Foundation
+public import Foundation
 
 /// Locates the path for an executable by name. Uses the `which` CLI tool, which
 /// respects `$PATH`.

@@ -1,4 +1,4 @@
-import Foundation
+public import Foundation
 
 /// An operation to perform on a media file as part of a conversion process.
 public struct Operation {
