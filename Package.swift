@@ -1,4 +1,4 @@
-// swift-tools-version: 6.3
+// swift-tools-version: 6.4
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -14,7 +14,7 @@ let upcomingFeatures: [SwiftSetting] = [
 
 let package = Package(
   name: "VideoSlimmer",
-  platforms: [.macOS(.v13)],
+  platforms: [.macOS(.v27)],
   dependencies: [
     .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.8.2"),
     .package(url: "https://github.com/swiftlang/swift-docc-plugin", from: "1.5.0")
