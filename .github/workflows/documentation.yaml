@@ -7,16 +7,21 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 concurrency:
   group: "pages"
   cancel-in-progress: true
 
 jobs:
+  route:
+    uses: RISCfuture/ci-workflows/.github/workflows/minerva-route.yml@1.1.0
+    permissions:
+      contents: read
   build:
-    runs-on: xcode-27
+    needs: route
+    permissions:
+      contents: read
+    runs-on: ${{ fromJSON(needs.route.outputs.xcode-27) }}
     steps:
       - uses: actions/checkout@v7.0.1
       - uses: maxim-lobanov/setup-xcode@v1.7.0
@@ -53,6 +58,9 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
     needs: build
+    permissions:
+      pages: write
+      id-token: write
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
